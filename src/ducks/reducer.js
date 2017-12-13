@@ -4,6 +4,7 @@ import axios from 'axios';
 const initialState = {
     tasks: [{}],
     user: '',
+    task: {},
     taskId: 28,
     taskObject: {
         title: ''
@@ -65,6 +66,11 @@ export function markCompleted(id) {
         payload: markComplete
     }
 }
+
+// export function getTask(index) {
+//     console.log('redux state', initialState[index])
+//     const task = initialState[index];
+// }
 
 export function resetWizard() {
     return {
