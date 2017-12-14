@@ -4,8 +4,13 @@ import axios from 'axios';
 const initialState = {
     tasks: [{}],
     user: '',
-    task: {},
-    taskId: 28,
+    task: [{
+        id: 24,
+        title: "New Task",
+        description: "",
+        completed: true
+    }],
+    taskId: '',
     taskObject: {
         title: ''
     },
@@ -18,9 +23,11 @@ const ADD_TASK = 'ADD_TASK';
 const RESET_WIZARD = 'RESET_WIZARD';
 const DELETE_TASK = 'DELETE_TASK';
 const MARK_COMPLETED = 'MARK_COMPLETED';
+const GET_TASK = 'GET_TASK';
 
 // ACTION CREATORS
 export function getAllTasks() {
+    console.log('Get All Tasks fired')
     const allTasks = axios.get('https://practiceapi.devmountain.com/api/tasks')
         .then(res => {
             return res.data;
@@ -67,10 +74,16 @@ export function markCompleted(id) {
     }
 }
 
-// export function getTask(index) {
-//     console.log('redux state', initialState[index])
-//     const task = initialState[index];
-// }
+export function getTask(index) {
+    const task = axios.get('https://practiceapi.devmountain.com/api/tasks')
+        .then(res => {
+            return [res.data[index]];
+        })
+    return {
+        type: GET_TASK,
+        payload: task
+    }
+}
 
 export function resetWizard() {
     return {
@@ -101,6 +114,10 @@ export default function reducer(state = initialState, action) {
 
         case MARK_COMPLETED + FULFILLED:
             return Object.assign({}, state, { tasks: action.payload })
+
+        case GET_TASK + FULFILLED: {
+            return Object.assign({}, state, { task: action.payload })
+        }
 
         default: return state;
     }

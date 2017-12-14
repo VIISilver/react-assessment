@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { getAllTasks, addTask, resetWizard, deleteTask, markCompleted } from './../../ducks/reducer';
+import { getAllTasks, addTask, resetWizard, deleteTask, markCompleted,getTask } from './../../ducks/reducer';
 import { connect } from 'react-redux';
 import './List.css';
 import Check from '../Check/Check';
+import {Link} from 'react-router-dom';
 
 class List extends Component {
   constructor(props) {
@@ -46,7 +47,7 @@ class List extends Component {
     const tasks = this.props.tasks;
     const taskList = tasks.map((task, i) => {
       return (
-        <div key={i}>
+        <Link to={`/item/${i}`}key={i} onClick={() => this.props.getTask(i)}>
           <div className='item'>
             <div className='start'>
               <Check checkedOff={tasks[i].completed} />
@@ -61,7 +62,7 @@ class List extends Component {
               <button onClick={() => this.props.deleteTask(tasks[i].id)}>X</button>
             </div>
           </div>
-        </div>
+        </Link>
       )
     });
 
@@ -73,7 +74,7 @@ class List extends Component {
           <input type="text" value={taskTitle} onChange={(e) => this.handleChange('taskTitle', e.target.value)} />
           <button className='add' onClick={() => {
             if (this.state.taskTitle === '' || this.state.taskTitle === null) {
-              alert('Please add a title');
+              alert('Please add a title.');
             } else {
               this.sendTask();
             }
@@ -88,10 +89,11 @@ class List extends Component {
 function mapStateToProps(state) {
   return {
     tasks: state.tasks,
-    taskObject: state.taskObject
+    taskObject: state.taskObject,
+    task: state.task
   }
 }
 
-const mapDispatchToProps = { getAllTasks, addTask, resetWizard, deleteTask, markCompleted }
+const mapDispatchToProps = { getAllTasks, addTask, resetWizard, deleteTask, markCompleted, getTask }
 
 export default connect(mapStateToProps, mapDispatchToProps)(List);
